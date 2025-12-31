@@ -1,98 +1,156 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import BalanceCard from "@/component/common/BalanceCard";
+import HotDealCard from "@/component/common/HotDealCard";
+import QuckActionBtn from "@/component/common/QuckActionBtn";
+import { ItemProps } from "@/component/common/type";
+import CustomTitle from "@/component/customTitles/CustomTitle";
+import { hotDeals } from "@/data/hotdeals";
+import AppContext from "@/service/context";
+import EvilIcons from "@expo/vector-icons/EvilIcons";
+import { useRouter } from "expo-router";
+import React, { useContext, useState } from "react";
+import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+const HomePage = () => {
+    const { user } = useContext(AppContext)!;
+    const router = useRouter();
+    const [hotDeal, setHotDeal] = useState<ItemProps | null>(null);
+    return (
+        <SafeAreaView style={styles.container}>
+            <View style={styles.guestContainer}>
+                <View style={styles.nameIntialContainer}>
+                    <Text style={styles.welcomeText}>
+                        {user?.username?.slice(0, 1) || "U"}
+                    </Text>
+                </View>
+                <View>
+                    <Text style={styles.welcomeText}>
+                        <Text>Yello,</Text> {user?.username}
+                    </Text>
+                    <Text style={styles.welcomeText}>09053677738</Text>
+                </View>
+            </View>
+            <View style={styles.contentContainer}>
+                <View>
+                    <CustomTitle title="Hot Deal 🚀" />
+                    <FlatList
+                        data={hotDeals}
+                        renderItem={({ item }) => {
+                            return (
+                                <HotDealCard
+                                    item={item}
+                                    onPress={() => {
+                                        alert(
+                                            `You selected ${item.title} for ${item.validity} at ${item.price}`
+                                        );
+                                        setHotDeal(item);
+                                    }}
+                                />
+                            );
+                        }}
+                        keyExtractor={(item) => item.id.toString()}
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={styles.container}
+                    />
+                </View>
+                <View style={styles.balanceContainer}>
+                    <Pressable style={styles.refreshBtn}>
+                        <Text style={styles.refreshBtnText}>Refresh Balance</Text>
+                        <EvilIcons name="refresh" size={24} color="#ffcc08ff" />
+                    </Pressable>
+                    <View style={styles.balanceWrapper}>
+                        <BalanceCard title="Airtime Balance" value="₦5,000" />
+                        <BalanceCard title="Data Balance" value="2.5GB" />
+                    </View>
+                </View>
+                <View style={{ marginTop: 30 }}>
+                    <CustomTitle title="Quick Actions" />
+                    <View style={styles.QuckActionBtnWrapper}>
+                        <QuckActionBtn
+                            title="Buy Airtime"
+                            onPress={() => router.push("/airtime")}
+                        />
+                        <QuckActionBtn
+                            title="Buy Data"
+                            onPress={() => router.push("/data")}
+                        />
+                    </View>
+                </View>
+                <View
+                    style={{
+                        marginTop: 30,
+                        paddingHorizontal: 20,
+                        paddingVertical: 10,
+                        borderWidth: 1,
+                        borderStyle: "dashed",
+                        borderColor: "rgba(255, 255, 255, 0.1)",
+                    }}
+                >
+                    <CustomTitle title="Market Place" />
+                    <Text style={{ color: "white" }}>Mini Apps will appear here</Text>
+                </View>
+            </View>
+        </SafeAreaView>
+    );
+};
 
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
-
-export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
-
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
-  );
-}
+export default HomePage;
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
+    container: {
+        backgroundColor: "black",
+        height: "100%",
+    },
+    guestContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        backgroundColor: "rgba(255, 255, 255, 0.1)",
+        gap: 10,
+        paddingLeft: 20,
+        paddingRight: 20,
+        paddingTop: 10,
+        paddingBottom: 10,
+    },
+    nameIntialContainer: {
+        width: 30,
+        height: 30,
+        borderRadius: 100,
+        borderWidth: 1,
+        borderColor: "rgba(255, 204, 8, 0.9)",
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    welcomeText: {
+        fontSize: 16,
+        fontWeight: 400,
+        color: "rgba(255, 204, 8, 0.9)",
+    },
+    contentContainer: {
+        padding: 20,
+    },
+
+    balanceContainer: {
+        marginTop: 20,
+        padding: 16,
+    },
+    balanceWrapper: {
+        flexDirection: "row",
+        gap: 10,
+    },
+
+    refreshBtn: {
+        padding: 10,
+        borderWidth: 1,
+        backgroundColor: "transparent",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    refreshBtnText: {
+        color: "#ffcc08ff",
+    },
+    QuckActionBtnWrapper: {
+        flexDirection: "row",
+        gap: 10,
+    },
 });
