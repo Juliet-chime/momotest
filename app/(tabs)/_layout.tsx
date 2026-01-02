@@ -37,8 +37,12 @@ const TabItem = ({
 
 export default function TabLayout() {
     return (
+
         <Tabs
             screenOptions={{
+                sceneStyle: {
+                    backgroundColor: 'black'
+                },
                 headerShown: false,
                 tabBarShowLabel: false,
                 tabBarItemStyle: {
@@ -108,6 +112,7 @@ export default function TabLayout() {
                 }}
             />
         </Tabs>
+
     );
 }
 

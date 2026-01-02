@@ -8,5 +8,5 @@ export default function Index() {
 
     return user?.isLoggedIn
         ? <Redirect href="/(tabs)" />
-        : <Redirect href="/(auth)/login" />;
+        : <Redirect href="/(auth)" />;
 }

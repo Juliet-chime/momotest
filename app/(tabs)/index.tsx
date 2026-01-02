@@ -98,7 +98,6 @@ export default HomePage;
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: "black",
         height: "100%",
     },
     guestContainer: {

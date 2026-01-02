@@ -5,4 +5,12 @@ type ItemProps = {
   price?: string;
 };
 
-export { ItemProps };
+type DataProps = {
+  id?: number;
+  title?: string;
+  validity?: string;
+  price?: string;
+};
+
+export { DataProps, ItemProps };
+
